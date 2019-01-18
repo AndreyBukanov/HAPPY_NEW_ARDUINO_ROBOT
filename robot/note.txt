@@ -1,0 +1,126 @@
+	/* 
+	 	Hello, and welcome to robot programming introduction!
+	*/
+
+	/*
+	 	About the project's structure:
+	 
+	 		> The main file which called robot.ino contains 2 base functions:
+	      
+                    setup() - this function will be called once.  
+					loop()  - this function will be called in infinite loop after setup() function call.
+
+			> Not so difficult to understand, right? Excellent, go next!
+	 */
+
+	/*
+		About Connecting and Building:
+
+			> While your collegues will be building the robot body, you should build this project
+			  to fill his brains.
+
+				* At first, you should plug the main controller board to your PC.
+				
+					 * Just grab the usb cable and put it to the hole in robot's back side.
+					   Another jack of the cable you shoud plug in to your PC's USB port.
+					   ***I drew a little scheme to help you. I think it will be useful =)
+					    ________
+					   |        |                        THE ROBOT      ____
+					   |   PC   |                         ___   ___    | > >|
+					 __|________|__    _ _ _ _ _ _ _    _/___\ /   \ __/ /
+					| ____ ..  /// | < _ _U_S_B_ _ _ > |____|_|  O  |___|
+					|______________|	   			     \___/ \___/
+
+				* Next, you should build a project.
+
+					* If you have written some code you shoud check and compile it.
+					  Press "Ctrl+R" to build firmware without uploading it to Robot;
+				
+				* Then, you can upload your firmware to the robot's brain.
+				  Press "Ctrl+U" and... IT'S ALIVE!!!!
+
+				> Remember it forever:
+					
+					* "Ctrl+R" compile and build
+					* "Ctrl+U" upload
+	*/
+
+	/*
+		About debugging:
+
+			> Unfortunately, today you can't use breakpoints and other convenience features = (
+
+			> But, you can print some debug information using com port!
+
+				* Just initialize it first, like this:
+	*/
+				Serial.begin(115200); // psss... number in brackets is the bitrate of connection... don't tell anyone...
+	/*
+				* ... And now you can send the messages to your PC:
+	*/
+				Serial.print("Message to computer \n"); // like this...
+				Serial.println((uint8_t)0xff, HEX);     // or this...
+				Serial.println((double)100.500, 5);     // or this...
+	/*
+			> That's great, is it? Much better than nothing!
+	*/
+
+	/*
+		About robot's API:
+
+			> One whole robot is too difficult for understanding.
+			  So we separated it into 3 different independent parts
+			  (don't worry, it's only abstraction of course :)
+
+			  Here are there:
+			  
+				* The Rangefinder Module:
+					
+					* Do you see this cute eyes? You should trust them!
+					  Welcome Rangefinder module!
+					  You can measure distance to any objects. Just call function like this:
+	*/
+					uint16_t distance = g_rfinder->Measure(); // distance measured in "cm"
+
+					if (distance == 0)
+					{
+						__asm("NOP"); // OOPS, this case means we have no measure result!
+					}
+	/*
+				* The Turning Platform Module:
+
+					* This is a neck of robot.
+					  You can turn it form 0 to 180 degrees.
+					  Let me show how it works:
+	*/
+					g_tplate->SetAngle(0);   // turn to the left...
+					g_tplate->SetAngle(90);  // .... to the middle...
+					g_tplate->SetAngle(180); // .... to the right...
+
+					uint16_t nec_angle = g_tplate->GetAngle(); // if you forgot what was last...
+	/*
+
+				* The Wheel Platform Module:
+
+					* So, the robot have no legs... :(
+					  But he has a good fast wheels!
+					  Let's see, what we can do:
+	*/
+					g_wplate->Run(FORWARD, 100); // Run, boy, run! 100 points run...
+					
+					while (g_wplate->GetStatus() == RUN) 
+					{
+						delay(100); // Just waiting
+					}
+
+					g_wplate->Turn(LEFT, 40); // Now, turn around! 40 points turn...
+
+					delay(100);
+
+					g_wplate->Stop(); // OK, stop! Such a good robot!
+	/*
+		> That's all! I taught you how it work, now it's your problem.
+		> Enjoy, and good luck!
+
+		 > P.S. the most curiouses is to find a little secret in the footer...
+	*/
